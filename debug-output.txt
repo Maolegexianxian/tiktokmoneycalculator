@@ -1,0 +1,33 @@
+=== I18n Toolkit Debug ===
+✅ Toolkit initialized
+📋 Config: srcDir=D:\workspaces\web_workspace\tiktokmoneycalculator\src
+📋 messagesDir=D:\workspaces\web_workspace\tiktokmoneycalculator\messages
+🌍 Locales: en, zh
+📁 srcDir exists: true
+📁 srcDir contents: app, components, i18n.ts, lib, middleware.ts, routing.ts, translations, types
+📁 Resolved srcDir: D:\workspaces\web_workspace\tiktokmoneycalculator\src
+🔍 Testing pattern: **/*.ts in D:\workspaces\web_workspace\tiktokmoneycalculator\src
+📄 Found 23 files with .ts:
+  - routing.ts
+  - middleware.ts
+  - i18n.ts
+  - types\translations.ts
+  - types\index.ts
+🔍 Testing pattern: **/*.tsx in D:\workspaces\web_workspace\tiktokmoneycalculator\src
+📄 Found 75 files with .tsx:
+  - app\page.tsx
+  - app\layout.tsx
+  - app\global-error.tsx
+  - components\ThemeProvider.tsx
+  - components\TestI18n.tsx
+🔍 Testing pattern: **/*.js in D:\workspaces\web_workspace\tiktokmoneycalculator\src
+📄 Found 0 files with .js:
+🔍 Testing pattern: **/*.jsx in D:\workspaces\web_workspace\tiktokmoneycalculator\src
+📄 Found 0 files with .jsx:
+📁 FileScanner found 0 source files
+🧪 TestI18n.tsx exists: true
+🧪 TestI18n.tsx content preview: import { useTranslations } from 'next-intl';
+
+export function TestI18nComponent() {
+  const t = useT...
+🔑 Keys extracted from TestI18n.tsx: title, description, button.submit, welcome.message, test, common, test.title, test.description, common.loading

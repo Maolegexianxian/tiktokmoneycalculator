@@ -1,0 +1,210 @@
+{
+  "timestamp": "2025-07-19T08:06:44.673Z",
+  "environment": "development",
+  "summary": {
+    "totalLocales": 12,
+    "productionReady": 3,
+    "inDevelopment": 9,
+    "totalKeys": 1158,
+    "translationCompleteness": {
+      "en": 0.3,
+      "zh": 0.3,
+      "en-GB": 0,
+      "zh-TW": 0,
+      "ja": 0,
+      "ko": 0,
+      "es": 0,
+      "fr": 0,
+      "de": 0,
+      "zh-HK": 0,
+      "es-MX": 0,
+      "ar": 0
+    }
+  },
+  "locales": {
+    "en": {
+      "name": "English",
+      "nativeName": "English",
+      "status": "production",
+      "direction": "ltr",
+      "region": "US",
+      "currency": "USD",
+      "totalKeys": 1158,
+      "todoItems": 1154,
+      "completeness": 0.3,
+      "lastUpdated": "Unknown"
+    },
+    "zh": {
+      "name": "Chinese (Simplified)",
+      "nativeName": "简体中文",
+      "status": "production",
+      "direction": "ltr",
+      "region": "CN",
+      "currency": "CNY",
+      "totalKeys": 1158,
+      "todoItems": 1154,
+      "completeness": 0.3,
+      "lastUpdated": "Unknown"
+    },
+    "en-GB": {
+      "name": "English (UK)",
+      "nativeName": "English (UK)",
+      "status": "production",
+      "direction": "ltr",
+      "region": "GB",
+      "currency": "GBP",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.537Z"
+    },
+    "zh-TW": {
+      "name": "Chinese (Traditional)",
+      "nativeName": "繁體中文",
+      "status": "beta",
+      "direction": "ltr",
+      "region": "TW",
+      "currency": "TWD",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.539Z"
+    },
+    "ja": {
+      "name": "Japanese",
+      "nativeName": "日本語",
+      "status": "beta",
+      "direction": "ltr",
+      "region": "JP",
+      "currency": "JPY",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.539Z"
+    },
+    "ko": {
+      "name": "Korean",
+      "nativeName": "한국어",
+      "status": "beta",
+      "direction": "ltr",
+      "region": "KR",
+      "currency": "KRW",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.539Z"
+    },
+    "es": {
+      "name": "Spanish",
+      "nativeName": "Español",
+      "status": "development",
+      "direction": "ltr",
+      "region": "ES",
+      "currency": "EUR",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.540Z"
+    },
+    "fr": {
+      "name": "French",
+      "nativeName": "Français",
+      "status": "development",
+      "direction": "ltr",
+      "region": "FR",
+      "currency": "EUR",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.540Z"
+    },
+    "de": {
+      "name": "German",
+      "nativeName": "Deutsch",
+      "status": "development",
+      "direction": "ltr",
+      "region": "DE",
+      "currency": "EUR",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.540Z"
+    },
+    "zh-HK": {
+      "name": "Chinese (Hong Kong)",
+      "nativeName": "繁體中文 (香港)",
+      "status": "development",
+      "direction": "ltr",
+      "region": "HK",
+      "currency": "HKD",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.541Z"
+    },
+    "es-MX": {
+      "name": "Spanish (Mexico)",
+      "nativeName": "Español (México)",
+      "status": "development",
+      "direction": "ltr",
+      "region": "MX",
+      "currency": "MXN",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.541Z"
+    },
+    "ar": {
+      "name": "Arabic",
+      "nativeName": "العربية",
+      "status": "development",
+      "direction": "rtl",
+      "region": "SA",
+      "currency": "SAR",
+      "totalKeys": 1151,
+      "todoItems": 1151,
+      "completeness": 0,
+      "lastUpdated": "2025-07-19T07:46:12.542Z"
+    }
+  },
+  "recommendations": [
+    {
+      "type": "critical",
+      "locale": "en",
+      "message": "Production locale en has only 0.3% completeness. Should be >95%."
+    },
+    {
+      "type": "critical",
+      "locale": "zh",
+      "message": "Production locale zh has only 0.3% completeness. Should be >95%."
+    },
+    {
+      "type": "critical",
+      "locale": "en-GB",
+      "message": "Production locale en-GB has only 0% completeness. Should be >95%."
+    },
+    {
+      "type": "warning",
+      "locale": "zh-TW",
+      "message": "Beta locale zh-TW has only 0% completeness. Should be >80%."
+    },
+    {
+      "type": "warning",
+      "locale": "ja",
+      "message": "Beta locale ja has only 0% completeness. Should be >80%."
+    },
+    {
+      "type": "warning",
+      "locale": "ko",
+      "message": "Beta locale ko has only 0% completeness. Should be >80%."
+    },
+    {
+      "type": "info",
+      "message": "RTL languages detected (ar). Ensure UI components support RTL layout."
+    },
+    {
+      "type": "info",
+      "message": "Multiple currencies detected (USD, GBP, CNY, TWD, HKD, JPY, KRW, EUR, MXN, SAR). Ensure proper currency formatting."
+    }
+  ]
+}

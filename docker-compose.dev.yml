@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Development
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: tiktok-calculator-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tiktok_calculator_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - tiktok-calculator-dev-network
+
+  # Redis Cache for Development
+  redis-dev:
+    image: redis:7-alpine
+    container_name: tiktok-calculator-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - tiktok-calculator-dev-network
+
+  # Development Database Admin (Optional)
+  adminer:
+    image: adminer
+    container_name: tiktok-calculator-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-dev
+    networks:
+      - tiktok-calculator-dev-network
+
+  # Redis Commander (Optional)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: tiktok-calculator-redis-commander
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOSTS=local:redis-dev:6379
+    depends_on:
+      - redis-dev
+    networks:
+      - tiktok-calculator-dev-network
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+
+networks:
+  tiktok-calculator-dev-network:
+    driver: bridge
