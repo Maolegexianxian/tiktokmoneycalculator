@@ -1,9 +1,11 @@
 export const features = {
   title: "功能特性",
   description: "探索我们的强大工具，帮助您最大化收益和影响力",
+  subtitle: "用最专业的TikTok变现工具，助您全面理解和优化收益。",
   calculator: {
-    title: "收益计算器",
-    description: "快速估算您的 TikTok 收益潜力，支持多平台分析",
+    title: "TikTok收益计算器",
+    description: "免费TikTok收益计算器，通过先进算法精准估算您的TikTok创作者收入、品牌合作收益和互动率，是创作者必备的收入估算工具。",
+    badge: "热门",
     features: [
       "基于真实数据的精准估算",
       "支持多平台收益计算",
@@ -32,8 +34,8 @@ export const features = {
     ]
   },
 
-  title: "强大功能",
-  subtitle: "理解和优化您 TikTok 收益所需的一切",
+  title: "强大的TikTok收益计算器功能",
+  subtitle: "免费TikTok收益计算器和创作者收入估算工具，理解和优化您的TikTok收益所需的一切",
   
   list: [
     {
@@ -69,9 +71,9 @@ export const features = {
   ],
   
   cta: {
-    title: "准备好计算您的收益了吗？",
-    description: "加入成千上万信任我们计算器的创作者行列",
-    button: "免费开始"
+    title: "准备好计算您的TikTok收益了吗？",
+    description: "加入成千上万信任我们免费TikTok收益计算器的创作者行列，获得精准收入估算",
+    button: "免费使用TikTok计算器"
   },
   
   highlights: {

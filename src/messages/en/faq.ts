@@ -33,6 +33,14 @@ export const faq = {
     improve: {
       question: "How can I improve my earning potential?",
       answer: "Focus on increasing engagement rates, posting consistently, choosing profitable niches, building authentic audience relationships, and diversifying your monetization strategies."
+    },
+    howMuchEarn: {
+      question: "How much do TikTok creators earn per post?",
+      answer: "Earnings per post vary widely. Creators with 50K–500K followers typically earn about $80–$1,650 per sponsored TikTok post. Top influencers can earn much more. Use our TikTok money calculator to estimate your potential earnings based on your profile metrics."
+    },
+    creatorFund: {
+      question: "How does the TikTok Creator Fund work?",
+      answer: "TikTok’s Creator Fund pays roughly $0.02–$0.04 per 1,000 views. Earnings depend on video performance, region, and engagement. The calculator factors in Creator Fund estimates for your earnings projection."
     }
   },
   

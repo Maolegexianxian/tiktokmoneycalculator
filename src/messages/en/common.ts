@@ -106,5 +106,16 @@ export const common = {
     perMonth: "per month",
     perYear: "per year",
     perVideo: "per video"
+  },
+  
+  metrics: {
+    followers: "Followers",
+    engagement: "Engagement",
+    views: "Views",
+    likes: "Likes",
+    comments: "Comments",
+    shares: "Shares",
+    subscribers: "Subscribers",
+    watchTime: "Watch Time"
   }
 } as const;

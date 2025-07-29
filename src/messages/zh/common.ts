@@ -40,6 +40,16 @@ export const common = {
     draft: "草稿",
     published: "已发布"
   },
+  metrics: {
+    followers: "粉丝",
+    engagement: "互动率",
+    views: "观看量",
+    likes: "点赞数",
+    comments: "评论数",
+    shares: "分享数",
+    subscribers: "订阅数",
+    watchTime: "观看时长"
+  },
   time: {
     now: "现在",
     today: "今天",

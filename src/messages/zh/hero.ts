@@ -1,11 +1,11 @@
 export const hero = {
-  badge: "免费计算器",
+  badge: "专业收益估算工具",
   title: {
-    line1: "TikTok收益",
-    line2: "计算器"
+    line1: "免费TikTok收益计算器",
+    line2: "精准估算创作者收入"
   },
-  subtitle: "计算您的创作者收入",
-  description: "精准计算您的社交媒体收益潜力",
+  subtitle: "免费TikTok收益计算器，精准估算创作者收入、品牌合作收益和变现潜力，专业的TikTok收入估算工具。",
+  description: "专业TikTok收益计算器和收入估算工具，基于粉丝数、互动率、品牌合作等数据，精准计算您的TikTok创作者收入潜力。免费TikTok收入计算器，全球创作者信赖的收益估算平台。",
   cta: {
     primary: "立即计算",
     secondary: "了解更多"

@@ -46,10 +46,29 @@ export function LanguageSwitcher({ className, variant = 'default' }: LanguageSwi
 
   const handleLanguageChange = (languageCode: string) => {
     // 获取当前路径，移除语言前缀
-    const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
+    // 支持的语言代码列表
+    const supportedLocales = ['en', 'zh', 'ja', 'ko', 'es', 'fr', 'de'];
+    
+    let pathWithoutLocale = pathname;
+    
+    // 检查路径是否以支持的语言代码开头
+    for (const locale of supportedLocales) {
+      const localePrefix = `/${locale}`;
+      if (pathname.startsWith(localePrefix + '/') || pathname === localePrefix) {
+        pathWithoutLocale = pathname.substring(localePrefix.length) || '/';
+        break;
+      }
+    }
+    
+    // 如果路径不是以语言代码开头，说明是默认语言(en)
+    if (pathWithoutLocale === pathname && !pathname.startsWith('/en')) {
+      pathWithoutLocale = pathname;
+    }
     
     // 构建新的路径
-    const newPath = `/${languageCode}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
+    const newPath = languageCode === 'en' 
+      ? pathWithoutLocale === '/' ? '/' : pathWithoutLocale
+      : `/${languageCode}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
     
     // 导航到新路径
     router.push(newPath);

@@ -18,6 +18,7 @@ import { howItWorks } from "./howItWorks";
 import { trending } from "./trending";
 import { successStories } from "./successStories";
 import { cta } from "./cta";
+import { breadcrumb } from "./breadcrumb";
 
 export const en = {
   metadata,
@@ -39,6 +40,7 @@ export const en = {
   trending,
   successStories,
   cta,
+  breadcrumb,
 } as const;
 
 export type Messages = typeof en;

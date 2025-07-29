@@ -20,6 +20,11 @@ export function formatCurrency(
   locale: string = 'en-US'
 ): string {
   try {
+    // 检查并处理无效值
+    if (typeof amount !== 'number' || isNaN(amount) || !isFinite(amount)) {
+      return `${currency} 0`;
+    }
+
     return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
@@ -28,7 +33,8 @@ export function formatCurrency(
     }).format(amount);
   } catch (error) {
     // 回退到基本格式
-    return `${currency} ${amount.toLocaleString()}`;
+    const safeAmount = (typeof amount === 'number' && !isNaN(amount) && isFinite(amount)) ? amount : 0;
+    return `${currency} ${safeAmount.toLocaleString()}`;
   }
 }
 
@@ -40,11 +46,34 @@ export function formatNumber(
   locale: string = 'en-US'
 ): string {
   try {
+    // 检查并处理无效值
+    if (typeof num !== 'number' || isNaN(num) || !isFinite(num)) {
+      return '0';
+    }
+
     return new Intl.NumberFormat(locale).format(num);
   } catch (error) {
-    return num.toLocaleString();
+    const safeNum = (typeof num === 'number' && !isNaN(num) && isFinite(num)) ? num : 0;
+    return safeNum.toLocaleString();
   }
 }
+
+/**
+ * 数值约束函数
+ */
+export function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * 计算数组平均值
+ */
+export function average(numbers: number[]): number {
+  if (numbers.length === 0) return 0;
+  return numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
+}
+
+
 
 /**
  * 格式化数字为紧凑格式（如1.2K, 1.5M）
@@ -250,34 +279,19 @@ export function truncate(text: string, length: number): string {
 }
 
 /**
- * 计算数组平均值
- */
-export function average(numbers: number[]): number {
-  if (numbers.length === 0) return 0;
-  return numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
-}
-
-/**
  * 计算数组中位数
  */
 export function median(numbers: number[]): number {
   if (numbers.length === 0) return 0;
-  
+
   const sorted = [...numbers].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
-  
+
   if (sorted.length % 2 === 0) {
     return ((sorted[middle - 1] || 0) + (sorted[middle] || 0)) / 2;
   }
 
   return sorted[middle] || 0;
-}
-
-/**
- * 将数字限制在指定范围内
- */
-export function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
 }
 
 /**

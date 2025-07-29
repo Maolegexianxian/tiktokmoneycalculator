@@ -3,12 +3,12 @@ export const features = {
   multiplatform: {
     badge: "Multi-platform Badge"
   },
-  title: "Powerful Features",
-  subtitle: "Everything you need to understand and optimize your TikTok earnings",
+  title: "Powerful TikTok Money Calculator Features",
+  subtitle: "Everything you need to understand and optimize your TikTok creator earnings with the best free TikTok earnings calculator and monetization tool.",
   calculator: {
-    badge: "Calculator Badge",
-    title: "Earnings Calculator",
-    description: "Estimate your TikTok earnings with advanced algorithms."
+    badge: "TikTok Money Calculator",
+    title: "TikTok Earnings Calculator",
+    description: "Estimate your TikTok creator earnings, brand partnership deals, and engagement rate with our advanced free TikTok money calculator and revenue estimator tool."
   },
   analytics: {
     title: "Analytics",
@@ -97,9 +97,9 @@ export const features = {
     }
   ],
   cta: {
-    title: "Ready to calculate your earnings?",
-    description: "Join thousands of creators who trust our calculator",
-    button: "Get Started Free"
+    title: "Ready to calculate your TikTok earnings?",
+    description: "Join thousands of creators who trust our free TikTok money calculator for accurate earnings estimates",
+    button: "Start TikTok Calculator Free"
   },
   
   highlights: {

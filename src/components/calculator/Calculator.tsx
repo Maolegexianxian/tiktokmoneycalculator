@@ -28,6 +28,8 @@ export function Calculator() {
 
   const handleCalculation = async (input: CalculatorInput) => {
     setIsCalculating(true);
+    console.log('Starting calculation with input:', input);
+
     try {
       const response = await fetch('/api/calculator', {
         method: 'POST',
@@ -36,16 +38,32 @@ export function Calculator() {
         },
         body: JSON.stringify(input),
       });
-      
+
+      console.log('API response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Calculation failed');
+        const errorText = await response.text();
+        console.error('API error response:', errorText);
+        throw new Error(`Calculation failed: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      setResults(result.data);
+      console.log('API response data:', result);
+
+      // 检查响应结构
+      if (result.success && result.data) {
+        console.log('Using result.data:', result.data);
+        setResults(result.data);
+      } else if (result.monthlyEarnings !== undefined) {
+        console.log('Using direct result:', result);
+        setResults(result);
+      } else {
+        console.error('Unexpected response structure:', result);
+        throw new Error('Invalid response structure');
+      }
     } catch (error) {
       console.error('Calculation error:', error);
-      // Handle error - show toast or error message
+      // TODO: Show user-friendly error message
     } finally {
       setIsCalculating(false);
     }

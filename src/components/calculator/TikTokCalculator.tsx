@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { Calculator, TrendingUp, Users, Eye, Heart, MessageCircle, Share, Info } from 'lucide-react';
+import { Calculator, TrendingUp, Users, Eye, Heart, MessageCircle, Share, Info, Lightbulb } from 'lucide-react';
 import { CalculatorInput } from '@/types';
 import { CONTENT_NICHES, AUDIENCE_LOCATIONS } from '@/lib/constants';
 
@@ -38,6 +38,7 @@ interface TikTokCalculatorProps {
 export function TikTokCalculator({ onCalculate, isCalculating }: TikTokCalculatorProps) {
   const t = useTranslations('calculator.tiktok');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [hasCalculated, setHasCalculated] = useState(false);
 
   const {
     register,
@@ -53,8 +54,8 @@ export function TikTokCalculator({ onCalculate, isCalculating }: TikTokCalculato
       avgLikes: 500,
       avgComments: 50,
       avgShares: 25,
-      contentNiche: '',
-      audienceLocation: '',
+      contentNiche: 'lifestyle', // 设置默认值
+      audienceLocation: 'us', // 设置默认值
       postFrequency: 7,
       accountAge: 12,
     },
@@ -77,12 +78,13 @@ export function TikTokCalculator({ onCalculate, isCalculating }: TikTokCalculato
         engagementRate,
       },
       profile: {
-        contentNiche: data.contentNiche,
-        audienceLocation: data.audienceLocation,
+        contentNiche: data.contentNiche || 'lifestyle', // 确保有默认值
+        audienceLocation: data.audienceLocation || 'us', // 确保有默认值
         ...(data.postFrequency !== undefined && { postFrequency: data.postFrequency }),
         ...(data.accountAge !== undefined && { accountAge: data.accountAge }),
       },
     };
+    setHasCalculated(true);
     onCalculate(input);
   };
 
@@ -203,7 +205,10 @@ export function TikTokCalculator({ onCalculate, isCalculating }: TikTokCalculato
             <label className="text-sm font-medium">
               {t('fields.contentNiche.label')}
             </label>
-            <Select onValueChange={(value) => setValue('contentNiche', value)}>
+            <Select
+              onValueChange={(value) => setValue('contentNiche', value)}
+              defaultValue="lifestyle"
+            >
               <SelectTrigger>
                 <SelectValue placeholder={t('fields.contentNiche.placeholder')} />
               </SelectTrigger>
@@ -227,7 +232,10 @@ export function TikTokCalculator({ onCalculate, isCalculating }: TikTokCalculato
             <label className="text-sm font-medium">
               {t('fields.audienceLocation.label')}
             </label>
-            <Select onValueChange={(value) => setValue('audienceLocation', value)}>
+            <Select
+              onValueChange={(value) => setValue('audienceLocation', value)}
+              defaultValue="us"
+            >
               <SelectTrigger>
                 <SelectValue placeholder={t('fields.audienceLocation.placeholder')} />
               </SelectTrigger>
@@ -326,12 +334,22 @@ export function TikTokCalculator({ onCalculate, isCalculating }: TikTokCalculato
         </AlertDescription>
       </Alert>
 
+      {/* Quick Start Tip */}
+      {!hasCalculated && (
+        <Alert className="border-blue-200 bg-blue-50">
+          <Lightbulb className="h-4 w-4 text-blue-600" />
+          <AlertDescription className="text-blue-800">
+            {t('tips.quickStart')}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Submit Button */}
       <div className="flex justify-center">
         <Button
           type="submit"
           size="lg"
-          disabled={!isValid || isCalculating}
+          disabled={isCalculating || !watchedValues.followers || !watchedValues.avgViews}
           className="min-w-[200px]"
         >
           {isCalculating ? (

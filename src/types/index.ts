@@ -59,6 +59,10 @@ export interface EarningsBreakdown {
   affiliateMarketing: number;
   merchandise: number;
   other: number;
+  // Platform-specific fields (optional for backward compatibility)
+  adRevenue?: number;      // YouTube specific
+  memberships?: number;    // YouTube specific
+  superChat?: number;      // YouTube specific
 }
 
 export interface InfluencingFactors {

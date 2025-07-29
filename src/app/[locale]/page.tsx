@@ -17,6 +17,7 @@ import { SocialProof } from '@/components/sections/SocialProof';
 import { Container } from '@/components/ui/Container';
 import { Separator } from '@/components/ui/separator';
 import { SITE_CONFIG } from '@/lib/constants';
+import { HomeStructuredData } from '@/components/seo/HomeStructuredData';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('metadata');
@@ -63,11 +64,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function HomePage() {
+export default async function HomePage({ params }: { params: { locale: string } }) {
   const t = await getTranslations('calculator');
   
   return (
     <div className="min-h-screen">
+      <HomeStructuredData locale={params.locale} />
       {/* Header */}
       <Header />
       

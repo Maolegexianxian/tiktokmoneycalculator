@@ -1,5 +1,5 @@
 // 基础类型定义
-export type Locale = 'en' | 'zh';
+export type Locale = 'en' | 'zh' | 'es' | 'fr' | 'ja' | 'ko' | 'de';
 
 // 消息结构类型
 export interface Messages {

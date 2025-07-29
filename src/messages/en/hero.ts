@@ -1,11 +1,11 @@
 export const hero = {
-  badge: "Free Calculator",
+  badge: "Professional Earnings Tool",
   title: {
-    line1: "TikTok Money",
-    line2: "Calculator"
+    line1: "Free TikTok Money Calculator",
+    line2: "Estimate Your Creator Earnings"
   },
-  subtitle: "Calculate Your Creator Earnings",
-  description: "Get accurate estimates of your potential earnings from TikTok monetization",
+  subtitle: "Accurately estimate your TikTok creator earnings, brand partnerships, and monetization potential with our free TikTok earnings calculator.",
+  description: "The ultimate TikTok money calculator and earnings estimator to calculate your potential revenue from followers, engagement rate, sponsored posts, and brand deals. Free TikTok revenue calculator trusted by creators worldwide for accurate earnings estimates.",
   cta: {
     primary: "Calculate Now",
     secondary: "Learn More"

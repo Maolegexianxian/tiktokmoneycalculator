@@ -18,6 +18,7 @@ import { howItWorks } from "./howItWorks";
 import { trending } from "./trending";
 import { successStories } from "./successStories";
 import { cta } from "./cta";
+import { breadcrumb } from "./breadcrumb";
 
 export const zh = {
   metadata,
@@ -39,6 +40,7 @@ export const zh = {
   trending,
   successStories,
   cta,
+  breadcrumb,
 } as const;
 
 export default zh;

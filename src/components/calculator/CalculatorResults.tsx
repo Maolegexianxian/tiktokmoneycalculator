@@ -41,15 +41,40 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
   const t = useTranslations('calculator.results');
   const [activeTab, setActiveTab] = useState('overview');
 
+  // 安全地解构results，提供默认值并处理NaN
+  const safeNumber = (value: any): number => {
+    const num = Number(value);
+    return (typeof num === 'number' && !isNaN(num) && isFinite(num)) ? num : 0;
+  };
+
   const {
-    monthlyEarnings,
-    yearlyEarnings,
-    perPostEarnings,
-    perThousandViewsEarnings,
-    breakdown,
-    factors,
-    tips,
+    monthlyEarnings = 0,
+    yearlyEarnings = 0,
+    perPostEarnings = 0,
+    perThousandViewsEarnings = 0,
+    breakdown = {
+      creatorFund: 0,
+      liveGifts: 0,
+      brandPartnerships: 0,
+      affiliateMarketing: 0,
+      merchandise: 0,
+      other: 0,
+    },
+    factors = {
+      engagement: { score: 0, impact: 'low' as const, description: '' },
+      niche: { multiplier: 1, impact: 'medium' as const, description: '' },
+      location: { multiplier: 1, impact: 'medium' as const, description: '' },
+      consistency: { score: 0, impact: 'medium' as const, description: '' },
+      quality: { score: 0, impact: 'medium' as const, description: '' },
+    },
+    tips = [],
   } = results;
+
+  // 确保所有数值都是安全的
+  const safeMonthlyEarnings = safeNumber(monthlyEarnings);
+  const safeYearlyEarnings = safeNumber(yearlyEarnings);
+  const safePerPostEarnings = safeNumber(perPostEarnings);
+  const safePerThousandViewsEarnings = safeNumber(perThousandViewsEarnings);
 
   const getEarningsColor = (amount: number) => {
     if (amount >= 10000) return 'text-green-600';
@@ -64,6 +89,56 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
     if (percentage >= 10) return 'bg-yellow-500';
     return 'bg-red-500';
   };
+
+  // 安全地获取breakdown值，提供默认值并处理NaN
+  const safeBreakdownValue = (key: keyof typeof breakdown): number => {
+    const value = breakdown?.[key] ?? 0;
+    return safeNumber(value);
+  };
+
+  // 根据平台获取收益项目标签
+  const getBreakdownLabels = (platform: string) => {
+    switch (platform.toLowerCase()) {
+      case 'tiktok':
+        return {
+          creatorFund: 'Creator Fund',
+          liveGifts: 'Live Gifts',
+          brandPartnerships: 'Brand Partnerships',
+          affiliateMarketing: 'Affiliate Marketing',
+          merchandise: 'Merchandise',
+          other: 'Other Revenue',
+        };
+      case 'instagram':
+        return {
+          creatorFund: 'Creator Fund',
+          liveGifts: 'Reels Play Bonus',
+          brandPartnerships: 'Brand Partnerships',
+          affiliateMarketing: 'Affiliate Marketing',
+          merchandise: 'Merchandise',
+          other: 'Other Revenue',
+        };
+      case 'youtube':
+        return {
+          creatorFund: 'Ad Revenue',
+          liveGifts: 'Memberships & Super Chat',
+          brandPartnerships: 'Brand Partnerships',
+          affiliateMarketing: 'Affiliate Marketing',
+          merchandise: 'Merchandise',
+          other: 'Other Revenue',
+        };
+      default:
+        return {
+          creatorFund: 'Platform Revenue',
+          liveGifts: 'Interactive Revenue',
+          brandPartnerships: 'Brand Partnerships',
+          affiliateMarketing: 'Affiliate Marketing',
+          merchandise: 'Merchandise',
+          other: 'Other Revenue',
+        };
+    }
+  };
+
+  const labels = getBreakdownLabels(platform);
 
   const getPlatformIcon = () => {
     switch (platform) {
@@ -133,8 +208,8 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
                     <p className="text-sm font-medium text-muted-foreground">
                       Monthly Earnings
                     </p>
-                    <p className={`text-2xl font-bold ${getEarningsColor(monthlyEarnings)}`}>
-                      {formatCurrency(monthlyEarnings)}
+                    <p className={`text-2xl font-bold ${getEarningsColor(safeMonthlyEarnings)}`}>
+                      {formatCurrency(safeMonthlyEarnings)}
                     </p>
                   </div>
                   <DollarSign className="h-8 w-8 text-green-600" />
@@ -149,8 +224,8 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
                     <p className="text-sm font-medium text-muted-foreground">
                       Yearly Earnings
                     </p>
-                    <p className={`text-2xl font-bold ${getEarningsColor(yearlyEarnings)}`}>
-                      {formatCurrency(yearlyEarnings)}
+                    <p className={`text-2xl font-bold ${getEarningsColor(safeYearlyEarnings)}`}>
+                      {formatCurrency(safeYearlyEarnings)}
                     </p>
                   </div>
                   <TrendingUp className="h-8 w-8 text-blue-600" />
@@ -165,8 +240,8 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
                     <p className="text-sm font-medium text-muted-foreground">
                       Per Post Earnings
                     </p>
-                    <p className={`text-2xl font-bold ${getEarningsColor(perPostEarnings)}`}>
-                      {formatCurrency(perPostEarnings)}
+                    <p className={`text-2xl font-bold ${getEarningsColor(safePerPostEarnings)}`}>
+                      {formatCurrency(safePerPostEarnings)}
                     </p>
                   </div>
                   <Users className="h-8 w-8 text-purple-600" />
@@ -181,8 +256,8 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
                     <p className="text-sm font-medium text-muted-foreground">
                       Per 1K Views
                     </p>
-                    <p className={`text-2xl font-bold ${getEarningsColor(perThousandViewsEarnings)}`}>
-                      {formatCurrency(perThousandViewsEarnings)}
+                    <p className={`text-2xl font-bold ${getEarningsColor(safePerThousandViewsEarnings)}`}>
+                      {formatCurrency(safePerThousandViewsEarnings)}
                     </p>
                   </div>
                   <Eye className="h-8 w-8 text-orange-600" />
@@ -243,44 +318,44 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Creator Fund</span>
+                  <span className="text-sm">{labels.creatorFund}</span>
                   <span className="font-semibold">
-                    {formatCurrency(breakdown.creatorFund)}
+                    {formatCurrency(safeBreakdownValue('creatorFund'))}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Live Gifts</span>
+                  <span className="text-sm">{labels.liveGifts}</span>
                   <span className="font-semibold">
-                    {formatCurrency(breakdown.liveGifts)}
+                    {formatCurrency(safeBreakdownValue('liveGifts'))}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Brand Partnerships</span>
+                  <span className="text-sm">{labels.brandPartnerships}</span>
                   <span className="font-semibold">
-                    {formatCurrency(breakdown.brandPartnerships)}
+                    {formatCurrency(safeBreakdownValue('brandPartnerships'))}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Affiliate Marketing</span>
+                  <span className="text-sm">{labels.affiliateMarketing}</span>
                   <span className="font-semibold">
-                    {formatCurrency(breakdown.affiliateMarketing)}
+                    {formatCurrency(safeBreakdownValue('affiliateMarketing'))}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Merchandise</span>
+                  <span className="text-sm">{labels.merchandise}</span>
                   <span className="font-semibold">
-                    {formatCurrency(breakdown.merchandise)}
+                    {formatCurrency(safeBreakdownValue('merchandise'))}
                   </span>
                 </div>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Other</span>
+                  <span className="text-sm">{labels.other}</span>
                   <span className="font-semibold">
-                    {formatCurrency(breakdown.other)}
+                    {formatCurrency(safeBreakdownValue('other'))}
                   </span>
                 </div>
                 <Separator />
@@ -346,50 +421,50 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
                 <div className="text-center">
                   <div className="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {monthlyEarnings > 0 ? Math.round((breakdown.brandPartnerships / monthlyEarnings) * 100) : 0}%
+                      {monthlyEarnings > 0 ? Math.round((safeBreakdownValue('brandPartnerships') / monthlyEarnings) * 100) : 0}%
                     </span>
                   </div>
-                  <p className="text-sm font-medium">Brand Partnerships</p>
+                  <p className="text-sm font-medium">{labels.brandPartnerships}</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-green-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {monthlyEarnings > 0 ? Math.round((breakdown.creatorFund / monthlyEarnings) * 100) : 0}%
+                      {monthlyEarnings > 0 ? Math.round((safeBreakdownValue('creatorFund') / monthlyEarnings) * 100) : 0}%
                     </span>
                   </div>
-                  <p className="text-sm font-medium">Creator Fund</p>
+                  <p className="text-sm font-medium">{labels.creatorFund}</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-purple-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {monthlyEarnings > 0 ? Math.round((breakdown.affiliateMarketing / monthlyEarnings) * 100) : 0}%
+                      {monthlyEarnings > 0 ? Math.round((safeBreakdownValue('affiliateMarketing') / monthlyEarnings) * 100) : 0}%
                     </span>
                   </div>
-                  <p className="text-sm font-medium">Affiliate Marketing</p>
+                  <p className="text-sm font-medium">{labels.affiliateMarketing}</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-orange-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {monthlyEarnings > 0 ? Math.round((breakdown.merchandise / monthlyEarnings) * 100) : 0}%
+                      {monthlyEarnings > 0 ? Math.round((safeBreakdownValue('merchandise') / monthlyEarnings) * 100) : 0}%
                     </span>
                   </div>
-                  <p className="text-sm font-medium">Merchandise</p>
+                  <p className="text-sm font-medium">{labels.merchandise}</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-red-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {monthlyEarnings > 0 ? Math.round((breakdown.liveGifts / monthlyEarnings) * 100) : 0}%
+                      {monthlyEarnings > 0 ? Math.round((safeBreakdownValue('liveGifts') / monthlyEarnings) * 100) : 0}%
                     </span>
                   </div>
-                  <p className="text-sm font-medium">Live Gifts</p>
+                  <p className="text-sm font-medium">{labels.liveGifts}</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gray-500 rounded-full mx-auto mb-2 flex items-center justify-center">
                     <span className="text-white font-bold">
-                      {monthlyEarnings > 0 ? Math.round((breakdown.other / monthlyEarnings) * 100) : 0}%
+                      {monthlyEarnings > 0 ? Math.round((safeBreakdownValue('other') / monthlyEarnings) * 100) : 0}%
                     </span>
                   </div>
-                  <p className="text-sm font-medium">Other</p>
+                  <p className="text-sm font-medium">{labels.other}</p>
                 </div>
               </div>
             </CardContent>
@@ -399,7 +474,15 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
         {/* Factors Tab */}
         <TabsContent value="factors" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {Object.entries(factors).map(([factorName, factor]) => {
+            {Object.entries(factors || {}).map(([factorName, factor]) => {
+              // 安全地处理factor对象，提供默认值
+              const safeFactor = factor || {
+                impact: 'medium',
+                score: 0,
+                multiplier: 1,
+                description: 'No description available'
+              };
+
               const getImpactColor = (impact: string) => {
                 switch (impact) {
                   case 'high':
@@ -441,19 +524,19 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium">Impact Level</span>
-                      <Badge className={getImpactColor(factor.impact)}>
-                        {factor.impact.charAt(0).toUpperCase() + factor.impact.slice(1)}
+                      <Badge className={getImpactColor(safeFactor.impact)}>
+                        {safeFactor.impact.charAt(0).toUpperCase() + safeFactor.impact.slice(1)}
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium">Score/Multiplier</span>
                       <span className="font-semibold">
-                        {'multiplier' in factor ? `${factor.multiplier}x` : factor.score}
+                        {'multiplier' in safeFactor ? `${safeFactor.multiplier}x` : safeFactor.score}
                       </span>
                     </div>
                     <div className="mt-3">
                       <p className="text-sm text-muted-foreground">
-                        {factor.description}
+                        {safeFactor.description}
                       </p>
                     </div>
                   </CardContent>
@@ -478,7 +561,7 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {tips.map((tip, index) => (
+                {(tips || []).map((tip, index) => (
                   <Alert key={index} className="border-l-4 border-l-blue-500">
                     <Info className="h-4 w-4" />
                     <AlertDescription className="ml-2">
@@ -535,7 +618,7 @@ export function CalculatorResults({ results, platform, onSave, onDownload }: Cal
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {results.tips.map((tip, index) => (
+                {(tips || []).map((tip, index) => (
                   <Alert key={index}>
                     <Info className="h-4 w-4" />
                     <AlertDescription>
