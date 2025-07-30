@@ -41,7 +41,9 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
     python3 \
     make \
     g++ \
-    tiff-dev
+    tiff-dev \
+    openssl1.1-compat
+
 
 WORKDIR /app
 
@@ -79,7 +81,9 @@ FROM base AS runner
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     libc6-compat \
     vips \
-    tiff
+    tiff \
+    openssl1.1-compat
+
 
 WORKDIR /app
 
