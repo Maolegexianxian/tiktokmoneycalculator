@@ -480,7 +480,15 @@ export const pageViewSchema = z.object({
  */
 export const fileUploadSchema = z.object({
   file: z
-    .instanceof(File, {
+    .any()
+    .refine((file) => {
+      // Check if it's a File-like object with required properties
+      return file && 
+             typeof file === 'object' && 
+             'size' in file && 
+             'type' in file && 
+             'arrayBuffer' in file;
+    }, {
       message: 'Please select a file',
     })
     .refine((file) => file.size <= 5 * 1024 * 1024, {
