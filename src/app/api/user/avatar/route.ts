@@ -5,10 +5,15 @@ import { prisma } from '@/lib/db';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
-import sharp from 'sharp';
+import {
+  validateImage,
+  processAvatar,
+  generateThumbnail,
+  isImageProcessingAvailable,
+  createImageProcessingErrorResponse,
+  IMAGE_CONFIG
+} from '@/lib/image-processor';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads', 'avatars');
 
 /**
@@ -17,6 +22,14 @@ const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads', 'avatars');
  */
 export async function POST(request: NextRequest) {
   try {
+    // Check if image processing is available
+    if (!(await isImageProcessingAvailable())) {
+      return NextResponse.json(
+        { error: 'Service Unavailable', message: 'Image processing service is not available' },
+        { status: 503 }
+      );
+    }
+
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -38,22 +51,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file type
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    if (!IMAGE_CONFIG.SUPPORTED_FORMATS.includes(file.type)) {
       return NextResponse.json(
-        { 
-          error: 'Validation Error', 
-          message: 'Invalid file type. Only JPEG, PNG, and WebP are allowed.' 
+        {
+          error: 'Validation Error',
+          message: 'Invalid file type. Only JPEG, PNG, WebP, and AVIF are allowed.'
         },
         { status: 400 }
       );
     }
 
     // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
+    if (file.size > IMAGE_CONFIG.MAX_FILE_SIZE) {
       return NextResponse.json(
-        { 
-          error: 'Validation Error', 
-          message: 'File too large. Maximum size is 5MB.' 
+        {
+          error: 'Validation Error',
+          message: `File too large. Maximum size is ${IMAGE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB.`
         },
         { status: 400 }
       );
@@ -75,15 +88,22 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Process image with Sharp
+    // Validate image
+    const validation = await validateImage(buffer);
+    if (!validation.isValid) {
+      return NextResponse.json(
+        { error: 'Validation Error', message: validation.error },
+        { status: 400 }
+      );
+    }
+
+    // Process image with enterprise-grade processor
     try {
-      const processedImage = await sharp(buffer)
-        .resize(400, 400, {
-          fit: 'cover',
-          position: 'center'
-        })
-        .jpeg({ quality: 90 })
-        .toBuffer();
+      const processedImage = await processAvatar(buffer, {
+        size: IMAGE_CONFIG.AVATAR_SIZE,
+        quality: IMAGE_CONFIG.JPEG_QUALITY,
+        format: 'jpeg'
+      });
 
       // Save processed image
       await writeFile(filePath.replace(`.${fileExtension}`, '.jpg'), processedImage);
@@ -122,14 +142,7 @@ export async function POST(request: NextRequest) {
       });
 
     } catch (imageError) {
-      console.error('Image processing error:', imageError);
-      return NextResponse.json(
-        { 
-          error: 'Processing Error', 
-          message: 'Failed to process image. Please try a different image.' 
-        },
-        { status: 400 }
-      );
+      return createImageProcessingErrorResponse(imageError);
     }
 
   } catch (error) {
@@ -208,41 +221,7 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-// Helper function to validate image
-async function validateImage(buffer: Buffer): Promise<boolean> {
-  try {
-    const metadata = await sharp(buffer).metadata();
-    
-    // Check if it's a valid image
-    if (!metadata.width || !metadata.height) {
-      return false;
-    }
-    
-    // Check dimensions (minimum 100x100, maximum 4000x4000)
-    if (metadata.width < 100 || metadata.height < 100) {
-      return false;
-    }
-    
-    if (metadata.width > 4000 || metadata.height > 4000) {
-      return false;
-    }
-    
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
 
-// Helper function to generate thumbnail
-async function generateThumbnail(buffer: Buffer, size: number = 150): Promise<Buffer> {
-  return await sharp(buffer)
-    .resize(size, size, {
-      fit: 'cover',
-      position: 'center'
-    })
-    .jpeg({ quality: 80 })
-    .toBuffer();
-}
 
 // Cleanup old avatars (run periodically)
 export async function cleanupOldAvatars() {
