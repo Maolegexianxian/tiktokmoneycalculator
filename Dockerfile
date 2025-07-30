@@ -1,5 +1,5 @@
-# Use the official Node.js 18 image as base
-FROM node:18-alpine AS base
+# Use the official Node.js 18 image as base with Alpine 3.18 for OpenSSL 1.1 compatibility
+FROM node:18-alpine3.18 AS base
 
 # Install dependencies only when needed
 FROM base AS deps

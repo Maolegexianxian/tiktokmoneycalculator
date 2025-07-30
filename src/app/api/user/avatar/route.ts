@@ -41,9 +41,9 @@ export async function POST(request: NextRequest) {
 
     // Parse form data
     const formData = await request.formData();
-    const file = formData.get('image') as File;
+    const file = formData.get('image');
 
-    if (!file) {
+    if (!file || !(file instanceof File)) {
       return NextResponse.json(
         { error: 'Validation Error', message: 'No image file provided' },
         { status: 400 }
