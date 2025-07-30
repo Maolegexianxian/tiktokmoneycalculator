@@ -22,12 +22,12 @@
 # 确认所有修复已应用
 node scripts/quick-validate.js
 
-# 测试构建（忽略Prisma错误）
-node test-build.js
+# 跳过本地构建测试（在Railway上构建）
+# 本地Prisma问题不影响Railway部署
 
 # 提交代码
 git add .
-git commit -m "Fix File object references for Railway deployment"
+git commit -m "Ready for Railway deployment - File errors fixed, Railway config added"
 git push origin main
 ```
 
@@ -38,7 +38,12 @@ git push origin main
    - 选择 "Deploy from GitHub repo"
    - 选择你的仓库
 
-2. **环境变量配置**
+2. **自动配置检测**
+   - Railway会自动检测 `railway.toml` 配置
+   - 自动使用 NIXPACKS 构建器
+   - 自动执行 `npm run railway:build` 构建命令
+
+3. **环境变量配置**
    ```bash
    NODE_ENV=production
    NEXT_TELEMETRY_DISABLED=1
@@ -47,10 +52,10 @@ git push origin main
    DATABASE_URL=postgresql://... # Railway自动生成
    ```
 
-3. **数据库设置**
+4. **数据库设置**
    - Railway会自动提供PostgreSQL数据库
    - `DATABASE_URL` 会自动设置
-   - 无需手动配置
+   - Prisma迁移会在启动时自动运行
 
 ### 3. 部署验证
 

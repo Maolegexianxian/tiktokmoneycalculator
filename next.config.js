@@ -5,6 +5,9 @@ const withNextIntl = require('next-intl/plugin')(
 );
 
 const nextConfig = {
+  // 暂时禁用standalone模式以避免构建问题
+  // output: 'standalone',
+
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
   },
