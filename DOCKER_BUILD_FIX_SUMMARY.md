@@ -18,18 +18,19 @@
 
 #### 基础镜像更改
 ```dockerfile
-# 从 Alpine 3.18 更改为 Alpine 3.16，提供更好的 OpenSSL 1.1 兼容性
-FROM node:18-alpine3.16 AS base
+# 从 Alpine 3.18 更改为 Alpine 3.15，提供稳定的 OpenSSL 支持
+FROM node:18-alpine3.15 AS base
 ```
 
-#### OpenSSL 1.1 兼容性包安装
-在所有构建阶段添加 `openssl1.1-compat` 包：
+#### OpenSSL 兼容性包安装
+在所有构建阶段添加标准 OpenSSL 包：
 
 ```dockerfile
 # deps 阶段
 RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat \
+    openssl \
+    openssl-dev \
     vips-dev \
     build-base \
     python3 \
@@ -39,7 +40,8 @@ RUN apk add --no-cache \
 # builder 阶段
 RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat \
+    openssl \
+    openssl-dev \
     vips-dev \
     build-base \
     python3 \
@@ -50,14 +52,25 @@ RUN apk add --no-cache \
 # runner 阶段
 RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat \
+    openssl \
     vips \
     tiff
 ```
 
+#### Prisma 二进制目标配置
+更新 `prisma/schema.prisma` 添加正确的二进制目标：
+
+```prisma
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+```
+
 #### 优化改进
 - 移除了重复的 `apk add` 命令
-- 移除了不必要的 `--repository` 参数（Alpine 3.16 默认仓库包含所需包）
+- 使用标准 OpenSSL 包而非兼容性包，提供更好的稳定性
+- 添加了 Prisma 二进制目标配置，支持 Alpine Linux musl 环境
 - 简化了包安装逻辑
 
 ### 2. API 路由修复

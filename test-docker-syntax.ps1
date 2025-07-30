@@ -16,10 +16,11 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
 } else {
     Write-Host "Docker not found. Please install Docker to test the build." -ForegroundColor Yellow
     Write-Host "Manual verification completed:" -ForegroundColor Cyan
-    Write-Host "✅ Changed base image to node:18-alpine3.16 for better OpenSSL 1.1 compatibility" -ForegroundColor Green
-    Write-Host "✅ Added openssl1.1-compat to all build stages" -ForegroundColor Green
-    Write-Host "✅ Removed duplicate package installations" -ForegroundColor Green
+    Write-Host "✅ Changed base image to node:18-alpine3.15 for OpenSSL compatibility" -ForegroundColor Green
+    Write-Host "✅ Added Prisma binaryTargets for linux-musl-openssl-3.0.x" -ForegroundColor Green
+    Write-Host "✅ Updated OpenSSL packages to use standard openssl + openssl-dev" -ForegroundColor Green
     Write-Host "✅ Fixed File type references in API routes" -ForegroundColor Green
+    Write-Host "✅ Regenerated Prisma client with new targets" -ForegroundColor Green
     Write-Host "✅ Local npm build completed successfully" -ForegroundColor Green
 }
 

@@ -1,12 +1,13 @@
-# Use the official Node.js 18 image as base with Alpine 3.16 for better OpenSSL 1.1 compatibility
-FROM node:18-alpine3.16 AS base
+# Use the official Node.js 18 image as base with Alpine 3.15 for OpenSSL 1.1 compatibility
+FROM node:18-alpine3.15 AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Install essential dependencies for Sharp and OpenSSL 1.1 compatibility
+# Install essential dependencies for Sharp and OpenSSL compatibility
 RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat \
+    openssl \
+    openssl-dev \
     vips-dev \
     build-base \
     python3 \
@@ -34,10 +35,11 @@ RUN npx prisma generate
 # Rebuild the source code only when needed
 FROM base AS builder
 
-# Install build dependencies including OpenSSL 1.1 for Prisma
+# Install build dependencies including OpenSSL for Prisma
 RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat \
+    openssl \
+    openssl-dev \
     vips-dev \
     build-base \
     python3 \
@@ -81,7 +83,7 @@ FROM base AS runner
 # Install runtime dependencies for Sharp and image processing
 RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat \
+    openssl \
     vips \
     tiff
 
