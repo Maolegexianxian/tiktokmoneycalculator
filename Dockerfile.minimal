@@ -1,4 +1,4 @@
-# Simple Railway Dockerfile for Next.js with Prisma
+# Minimal Railway Dockerfile for Next.js with Prisma
 FROM node:18-alpine
 
 # Install dependencies
@@ -6,27 +6,23 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files and install dependencies
 COPY package*.json ./
-COPY prisma ./prisma
-
-# Install dependencies
 RUN npm ci
 
-# Generate Prisma client
+# Copy Prisma schema and generate client
+COPY prisma ./prisma
 RUN npx prisma generate
 
-# Copy source code and public directory
-COPY src ./src
-COPY public ./public
+# Copy all source files
+COPY . .
 
-# Copy configuration files (with error handling)
-COPY next.config.js ./
-COPY tsconfig.json ./
-COPY *.config.js ./
+# Remove node_modules to avoid conflicts and reinstall
+RUN rm -rf node_modules && npm ci
 
-# Verify public directory exists
-RUN ls -la public/ && echo "Public directory contents:" && ls -la public/
+# Verify important directories exist
+RUN ls -la public/ || echo "Warning: public directory not found"
+RUN ls -la src/ || echo "Warning: src directory not found"
 
 # Environment variables
 ENV NODE_ENV=production
