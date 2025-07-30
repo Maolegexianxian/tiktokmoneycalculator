@@ -120,6 +120,6 @@ docker-compose*
 *.tsbuildinfo
 .eslintrc*
 .prettierrc*
-# jest.config* - 注释掉，构建需要
-# tailwind.config* - 注释掉，构建需要
-# postcss.config* - 注释掉，构建需要
+jest.config*
+# tailwind.config* - 需要用于构建
+# postcss.config* - 需要用于构建

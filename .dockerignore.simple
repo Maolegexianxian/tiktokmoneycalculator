@@ -1,0 +1,67 @@
+# Node modules
+node_modules
+npm-debug.log*
+
+# Next.js build output
+.next/
+out/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
+.git
+.gitignore
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Testing
+coverage/
+__tests__/
+test/
+tests/
+*.test.*
+*.spec.*
+
+# Cache
+.cache
+.parcel-cache
+.eslintcache
+
+# Temporary
+tmp/
+temp/
+
+# Docker files (except the one we're using)
+Dockerfile
+Dockerfile.*
+!Dockerfile.simple
+docker-compose*
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Build info
+*.tsbuildinfo

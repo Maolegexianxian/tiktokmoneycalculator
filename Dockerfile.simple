@@ -6,6 +6,9 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
+# Copy dockerignore for this build
+COPY .dockerignore.simple .dockerignore
+
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma
@@ -16,14 +19,14 @@ RUN npm ci
 # Generate Prisma client
 RUN npx prisma generate
 
-# Copy source code and public directory
-COPY src ./src
-COPY public ./public
+# Copy all necessary files for build
+COPY . .
 
-# Copy configuration files (with error handling)
-COPY next.config.js ./
-COPY tsconfig.json ./
-COPY *.config.js ./
+# Remove unnecessary files to keep image clean
+RUN rm -rf node_modules/.cache || true
+RUN rm -rf .git || true
+RUN rm -rf docs || true
+RUN rm -rf *.md || true
 
 # Verify public directory exists
 RUN ls -la public/ && echo "Public directory contents:" && ls -la public/
