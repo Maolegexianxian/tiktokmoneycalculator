@@ -40,7 +40,8 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
     build-base \
     python3 \
     make \
-    g++
+    g++ \
+    tiff-dev
 
 WORKDIR /app
 
@@ -77,7 +78,8 @@ FROM base AS runner
 # Install runtime dependencies for Sharp and image processing
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     libc6-compat \
-    vips
+    vips \
+    tiff
 
 WORKDIR /app
 
