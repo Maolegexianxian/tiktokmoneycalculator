@@ -4,7 +4,7 @@ FROM node:18-alpine AS base
 # Install dependencies only when needed
 FROM base AS deps
 # Install essential dependencies for Sharp
-RUN apk add --no-cache \
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     libc6-compat \
     vips-dev \
     build-base \
@@ -34,7 +34,7 @@ RUN npx prisma generate
 FROM base AS builder
 
 # Install build dependencies
-RUN apk add --no-cache \
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     libc6-compat \
     vips-dev \
     build-base \
@@ -75,7 +75,7 @@ RUN npm run build
 FROM base AS runner
 
 # Install runtime dependencies for Sharp and image processing
-RUN apk add --no-cache \
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     libc6-compat \
     vips
 
