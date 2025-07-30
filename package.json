@@ -13,7 +13,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "postinstall": "prisma generate",
+    "postinstall-disabled": "prisma generate",
     "clean": "rm -rf .next out dist build",
     "deploy": "npm run build && npm start",
     "health-check": "curl -f http://localhost:3000/api/health || exit 1",

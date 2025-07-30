@@ -6,14 +6,20 @@ WORKDIR /app
 # Copy package files first for better caching
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies (no postinstall script now)
 RUN npm ci
 
-# Copy everything else (let .dockerignore handle exclusions)
-COPY . .
+# Copy prisma schema
+COPY prisma ./prisma
+
+# Verify prisma files are copied
+RUN ls -la prisma/ && echo "Prisma files copied successfully"
 
 # Generate Prisma client
 RUN npx prisma generate
+
+# Copy everything else (let .dockerignore handle exclusions)
+COPY . .
 
 # Build the application
 ENV NODE_ENV=production
