@@ -1,11 +1,12 @@
-# Use the official Node.js 18 image as base with Alpine 3.18 for OpenSSL 1.1 compatibility
-FROM node:18-alpine3.18 AS base
+# Use the official Node.js 18 image as base with Alpine 3.16 for better OpenSSL 1.1 compatibility
+FROM node:18-alpine3.16 AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Install essential dependencies for Sharp
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+# Install essential dependencies for Sharp and OpenSSL 1.1 compatibility
+RUN apk add --no-cache \
     libc6-compat \
+    openssl1.1-compat \
     vips-dev \
     build-base \
     python3 \
@@ -34,20 +35,15 @@ RUN npx prisma generate
 FROM base AS builder
 
 # Install build dependencies including OpenSSL 1.1 for Prisma
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+RUN apk add --no-cache \
     libc6-compat \
-    openssl1.1-compat
-
-# Install build dependencies
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
-    libc6-compat \
+    openssl1.1-compat \
     vips-dev \
     build-base \
     python3 \
     make \
     g++ \
-    tiff-dev \
-    openssl1.1-compat
+    tiff-dev
 
 
 WORKDIR /app
@@ -83,11 +79,11 @@ RUN npm run build
 FROM base AS runner
 
 # Install runtime dependencies for Sharp and image processing
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+RUN apk add --no-cache \
     libc6-compat \
+    openssl1.1-compat \
     vips \
-    tiff \
-    openssl1.1-compat
+    tiff
 
 
 WORKDIR /app

@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('image');
 
-    if (!file || !(file instanceof File)) {
+    // Check if file exists and has required properties
+    if (!file || typeof file === 'string' || !file.type || !file.size || !file.arrayBuffer) {
       return NextResponse.json(
         { error: 'Validation Error', message: 'No image file provided' },
         { status: 400 }
@@ -80,7 +81,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate unique filename
-    const fileExtension = file.name.split('.').pop() || 'jpg';
+    const fileExtension = (file.name && typeof file.name === 'string') 
+      ? file.name.split('.').pop() || 'jpg'
+      : 'jpg';
     const fileName = `${randomUUID()}.${fileExtension}`;
     const filePath = join(UPLOAD_DIR, fileName);
 
