@@ -476,31 +476,37 @@ export const pageViewSchema = z.object({
 });
 
 /**
- * 文件上传验证模式 - 仅在客户端使用
+ * 文件上传验证模式 - 服务器端安全版本
  */
-export const fileUploadSchema = typeof window !== 'undefined' ? z.object({
-  file: z
-    .any()
-    .refine((file) => {
-      // Check if it's a File-like object with required properties
-      return file && 
-             typeof file === 'object' && 
-             'size' in file && 
-             'type' in file && 
+export const fileUploadSchema = z.object({
+  file: z.any().refine((file) => {
+    // 在服务器端，我们只检查基本属性
+    if (typeof window === 'undefined') {
+      // 服务器端：检查FormData文件对象
+      return file &&
+             typeof file === 'object' &&
+             'size' in file &&
+             'type' in file;
+    } else {
+      // 客户端：检查File对象
+      return file &&
+             typeof file === 'object' &&
+             'size' in file &&
+             'type' in file &&
              'arrayBuffer' in file;
-    }, {
-      message: 'Please select a file',
-    })
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: 'File size must be less than 5MB',
-    })
-    .refine(
-      (file) => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type),
-      {
-        message: 'Only JPEG, PNG, GIF, and WebP images are allowed',
-      }
-    ),
-}) : z.object({ file: z.any() }); // 服务器端简化版本
+    }
+  }, {
+    message: 'Please select a valid file',
+  }).refine((file) => {
+    return file && file.size <= 5 * 1024 * 1024;
+  }, {
+    message: 'File size must be less than 5MB',
+  }).refine((file) => {
+    return file && ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type);
+  }, {
+    message: 'Only JPEG, PNG, GIF, and WebP images are allowed',
+  }),
+});
 
 /**
  * 搜索查询验证模式

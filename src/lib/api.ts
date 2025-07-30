@@ -202,7 +202,7 @@ class ApiClient {
   /**
    * 上传文件
    */
-  async upload<T = any>(url: string, file: File, onProgress?: (progress: number) => void): Promise<ApiResponse<T>> {
+  async upload<T = any>(url: string, file: any, onProgress?: (progress: number) => void): Promise<ApiResponse<T>> {
     const formData = new FormData();
     formData.append('file', file);
 
