@@ -16,8 +16,17 @@ RUN npm ci
 # Generate Prisma client
 RUN npx prisma generate
 
-# Copy source code
-COPY . .
+# Copy source code and public directory
+COPY src ./src
+COPY public ./public
+COPY next.config.js ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
+COPY tsconfig.json ./
+COPY i18n.config.js ./
+
+# Verify public directory exists
+RUN ls -la public/ && echo "Public directory contents:" && ls -la public/
 
 # Environment variables
 ENV NODE_ENV=production
@@ -26,6 +35,9 @@ ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholde
 
 # Build the application
 RUN npm run build
+
+# Verify build completed
+RUN ls -la .next/ && echo "Build completed successfully"
 
 # Expose port
 EXPOSE 3000

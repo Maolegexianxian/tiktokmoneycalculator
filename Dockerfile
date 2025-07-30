@@ -60,8 +60,20 @@ ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
 # Install all dependencies including dev dependencies for build
 RUN npm ci --include=optional
 
-# Copy source code
-COPY . .
+# Copy source code (excluding public for now)
+COPY src ./src
+COPY prisma ./prisma
+COPY next.config.js ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
+COPY tsconfig.json ./
+COPY i18n.config.js ./
+
+# Copy public directory separately to ensure it exists
+COPY public ./public
+
+# Verify public directory exists after copy
+RUN ls -la public/ || echo "Error: public directory not found after copy"
 
 # Environment variables for build
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -79,8 +91,7 @@ RUN npm run build
 
 # Verify build outputs exist
 RUN ls -la .next/ || echo "Warning: .next directory not found"
-RUN ls -la .next/standalone/ || echo "Warning: .next/standalone directory not found"
-RUN ls -la public/ || echo "Warning: public directory not found"
+RUN ls -la public/ || echo "Warning: public directory not found after build"
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -103,7 +114,7 @@ ENV RUNTIME=true
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy the public folder (if it exists)
+# Copy the public folder
 COPY --from=builder /app/public ./public
 
 # Set the correct permission for prerender cache
