@@ -19,7 +19,8 @@
 #### 基础镜像更改
 ```dockerfile
 # 从 Alpine 3.18 更改为 Alpine 3.15，提供稳定的 OpenSSL 支持
-FROM node:18-alpine3.15 AS base
+# 同时更新 Node.js 版本到 18.17 以满足 Next.js 要求
+FROM node:18.17-alpine3.15 AS base
 ```
 
 #### OpenSSL 兼容性包安装
@@ -116,6 +117,7 @@ npm run build
 ```
 - 状态：**成功**
 - 结果：所有页面和 API 路由编译成功，无错误
+- Node.js 版本：18.17，满足 Next.js >= 18.17.0 的要求
 
 ### 🔄 Docker 构建测试
 由于当前环境未安装 Docker，需要手动验证：
