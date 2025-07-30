@@ -13,6 +13,7 @@ import {
   createImageProcessingErrorResponse,
   IMAGE_CONFIG
 } from '@/lib/image-processor';
+import { validateAvatarFile, createFileValidationError } from '@/lib/file-validation';
 
 const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads', 'avatars');
 
@@ -43,32 +44,11 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('image');
 
-    // Check if file exists and has required properties
-    if (!file || typeof file === 'string' || !file.type || !file.size || !file.arrayBuffer) {
+    // 使用新的文件验证工具
+    const fileValidation = validateAvatarFile(file);
+    if (!fileValidation.isValid) {
       return NextResponse.json(
-        { error: 'Validation Error', message: 'No image file provided' },
-        { status: 400 }
-      );
-    }
-
-    // Validate file type
-    if (!IMAGE_CONFIG.SUPPORTED_FORMATS.includes(file.type)) {
-      return NextResponse.json(
-        {
-          error: 'Validation Error',
-          message: 'Invalid file type. Only JPEG, PNG, WebP, and AVIF are allowed.'
-        },
-        { status: 400 }
-      );
-    }
-
-    // Validate file size
-    if (file.size > IMAGE_CONFIG.MAX_FILE_SIZE) {
-      return NextResponse.json(
-        {
-          error: 'Validation Error',
-          message: `File too large. Maximum size is ${IMAGE_CONFIG.MAX_FILE_SIZE / 1024 / 1024}MB.`
-        },
+        createFileValidationError(fileValidation),
         { status: 400 }
       );
     }

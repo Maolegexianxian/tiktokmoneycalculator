@@ -476,37 +476,38 @@ export const pageViewSchema = z.object({
 });
 
 /**
- * 文件上传验证模式 - 服务器端安全版本
+ * 文件上传验证模式 - 暂时禁用以避免构建时File对象引用问题
+ * 使用直接的运行时验证代替
  */
-export const fileUploadSchema = z.object({
-  file: z.any().refine((file) => {
-    // 在服务器端，我们只检查基本属性
-    if (typeof window === 'undefined') {
-      // 服务器端：检查FormData文件对象
-      return file &&
-             typeof file === 'object' &&
-             'size' in file &&
-             'type' in file;
-    } else {
-      // 客户端：检查File对象
-      return file &&
-             typeof file === 'object' &&
-             'size' in file &&
-             'type' in file &&
-             'arrayBuffer' in file;
-    }
-  }, {
-    message: 'Please select a valid file',
-  }).refine((file) => {
-    return file && file.size <= 5 * 1024 * 1024;
-  }, {
-    message: 'File size must be less than 5MB',
-  }).refine((file) => {
-    return file && ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type);
-  }, {
-    message: 'Only JPEG, PNG, GIF, and WebP images are allowed',
-  }),
-});
+// export const fileUploadSchema = z.object({
+//   file: z.any().refine((file) => {
+//     // 在服务器端，我们只检查基本属性
+//     if (typeof window === 'undefined') {
+//       // 服务器端：检查FormData文件对象
+//       return file &&
+//              typeof file === 'object' &&
+//              'size' in file &&
+//              'type' in file;
+//     } else {
+//       // 客户端：检查File对象
+//       return file &&
+//              typeof file === 'object' &&
+//              'size' in file &&
+//              'type' in file &&
+//              'arrayBuffer' in file;
+//     }
+//   }, {
+//     message: 'Please select a valid file',
+//   }).refine((file) => {
+//     return file && file.size <= 5 * 1024 * 1024;
+//   }, {
+//     message: 'File size must be less than 5MB',
+//   }).refine((file) => {
+//     return file && ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type);
+//   }, {
+//     message: 'Only JPEG, PNG, GIF, and WebP images are allowed',
+//   }),
+// });
 
 /**
  * 搜索查询验证模式
@@ -716,6 +717,6 @@ export type Feedback = z.infer<typeof feedbackSchema>;
 export type SaveCalculation = z.infer<typeof saveCalculationSchema>;
 export type AnalyticsEvent = z.infer<typeof analyticsEventSchema>;
 export type PageView = z.infer<typeof pageViewSchema>;
-export type FileUpload = z.infer<typeof fileUploadSchema>;
+// export type FileUpload = z.infer<typeof fileUploadSchema>;
 export type SearchQuery = z.infer<typeof searchQuerySchema>;
 export type Pagination = z.infer<typeof paginationSchema>;
