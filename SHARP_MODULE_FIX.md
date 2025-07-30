@@ -15,29 +15,30 @@ Error: Could not load the "sharp" module using the linuxmusl-x64 runtime
 2. **构建时加载**: API路由在构建时被静态分析，导致Sharp模块被提前加载
 3. **缺少系统依赖**: Alpine Linux容器缺少Sharp所需的系统库
 4. **二进制文件缺失**: npm安装时没有正确下载Linux平台的二进制文件
+5. **包名错误**: Alpine Linux中某些包名与其他发行版不同（如libtiff vs tiff）
 
 ## 企业级解决方案
 
 ### 1. Dockerfile优化
 
-#### 系统依赖安装
+#### 系统依赖安装（修复版）
 ```dockerfile
-# 安装Sharp所需的系统依赖
+# 安装Sharp所需的系统依赖（使用正确的Alpine包名）
 RUN apk add --no-cache \
     libc6-compat \
     vips-dev \
     build-base \
     python3 \
     make \
-    g++ \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libwebp-dev \
-    libtiff-dev \
-    giflib-dev \
-    librsvg-dev \
-    libheif-dev
+    g++
+
+# 运行时依赖
+RUN apk add --no-cache \
+    libc6-compat \
+    vips
 ```
+
+**注意**: 移除了不存在的包名如 `libtiff-dev`（应为 `tiff-dev`）和 `libheif-dev`（在某些Alpine版本中不可用）
 
 #### 平台特定安装
 ```dockerfile
@@ -215,3 +216,58 @@ node -e "require('sharp')('test.jpg').metadata().then(console.log)"
 4. **确保了生产环境的稳定性和性能**
 
 这个解决方案遵循企业级标准，提供了可扩展、可维护、高性能的图像处理能力。
+
+## 故障排除指南
+
+### 常见问题及解决方案
+
+#### 1. 包安装失败
+```
+ERROR: unable to select packages: libtiff (no such package)
+ERROR: unable to select packages: libheif-dev (no such package)
+```
+
+**原因**: Alpine Linux中某些包名与其他发行版不同，或某些包在特定版本中不可用。
+
+**解决方案**:
+- 使用正确的Alpine包名：`libtiff-dev` → `tiff-dev`
+- 移除不必要或不可用的包：`libheif-dev`
+- 使用最小化依赖集合，只安装必需的包
+
+#### 2. Sharp模块加载失败
+```
+Error: Could not load the "sharp" module using the linuxmusl-x64 runtime
+```
+
+**解决方案**:
+- 确保安装了 `vips-dev` 和 `build-base`
+- 设置正确的环境变量：`SHARP_IGNORE_GLOBAL_LIBVIPS=1`
+- 在容器中重新构建Sharp：`npm rebuild sharp`
+
+#### 3. 构建时内存不足
+**解决方案**:
+- 增加Docker构建内存限制
+- 使用多阶段构建减少内存使用
+- 清理npm缓存：`npm cache clean --force`
+
+### 测试和验证
+
+#### 快速测试
+```bash
+# 测试Docker构建
+./test-docker-build.sh  # Linux/macOS
+.\test-docker-build.ps1 # Windows
+
+# 手动测试
+docker build -f Dockerfile.enterprise -t test-app .
+docker run -p 3000:3000 test-app
+```
+
+#### 验证Sharp功能
+```bash
+# 进入容器测试Sharp
+docker exec -it container_name node -e "
+const sharp = require('sharp');
+console.log('Sharp version:', sharp.versions);
+"
+```

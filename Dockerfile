@@ -3,21 +3,14 @@ FROM node:18-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Install system dependencies required for Sharp and other native modules
+# Install essential dependencies for Sharp
 RUN apk add --no-cache \
     libc6-compat \
     vips-dev \
     build-base \
     python3 \
     make \
-    g++ \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libwebp-dev \
-    libtiff-dev \
-    giflib-dev \
-    librsvg-dev \
-    libheif-dev
+    g++
 
 WORKDIR /app
 
@@ -27,11 +20,10 @@ COPY prisma ./prisma
 
 # Set platform-specific environment variables for Sharp
 ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
-ENV SHARP_FORCE_GLOBAL_LIBVIPS=false
 
 RUN \
   if [ -f package-lock.json ]; then \
-    npm ci --omit=dev --include=optional --platform=linux --arch=x64; \
+    npm ci --omit=dev --include=optional; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -48,14 +40,7 @@ RUN apk add --no-cache \
     build-base \
     python3 \
     make \
-    g++ \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libwebp-dev \
-    libtiff-dev \
-    giflib-dev \
-    librsvg-dev \
-    libheif-dev
+    g++
 
 WORKDIR /app
 
@@ -65,10 +50,9 @@ COPY prisma ./prisma
 
 # Set platform-specific environment variables for Sharp
 ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
-ENV SHARP_FORCE_GLOBAL_LIBVIPS=false
 
 # Install all dependencies including dev dependencies for build
-RUN npm ci --include=optional --platform=linux --arch=x64
+RUN npm ci --include=optional
 
 # Copy source code
 COPY . .
@@ -81,8 +65,8 @@ ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholde
 # Generate Prisma client
 RUN npx prisma generate
 
-# Rebuild Sharp for the current platform
-RUN npm rebuild sharp --platform=linux --arch=x64
+# Rebuild Sharp for the current platform to ensure compatibility
+RUN npm rebuild sharp
 
 # Build the application
 RUN npm run build
@@ -93,21 +77,13 @@ FROM base AS runner
 # Install runtime dependencies for Sharp and image processing
 RUN apk add --no-cache \
     libc6-compat \
-    vips \
-    libjpeg-turbo \
-    libpng \
-    libwebp \
-    libtiff \
-    giflib \
-    librsvg \
-    libheif
+    vips
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
-ENV SHARP_FORCE_GLOBAL_LIBVIPS=false
 ENV RUNTIME=true
 
 RUN addgroup --system --gid 1001 nodejs

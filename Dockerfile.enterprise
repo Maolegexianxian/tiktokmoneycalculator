@@ -1,0 +1,114 @@
+# Enterprise-grade Dockerfile for TikTok Money Calculator
+# Optimized for Sharp module and production deployment
+
+FROM node:18-alpine AS base
+
+# Install essential system dependencies
+RUN apk add --no-cache \
+    libc6-compat \
+    dumb-init
+
+# Set working directory
+WORKDIR /app
+
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Dependencies stage
+FROM base AS deps
+
+# Install build dependencies for native modules
+RUN apk add --no-cache \
+    build-base \
+    python3 \
+    make \
+    g++ \
+    vips-dev
+
+# Copy package files
+COPY package.json package-lock.json* ./
+COPY prisma ./prisma
+
+# Configure Sharp for Alpine Linux
+ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
+
+# Install dependencies
+RUN npm ci --omit=dev --include=optional && \
+    npx prisma generate && \
+    npm cache clean --force
+
+# Builder stage
+FROM base AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    python3 \
+    make \
+    g++ \
+    vips-dev
+
+# Copy package files and install all dependencies
+COPY package.json package-lock.json* ./
+COPY prisma ./prisma
+
+# Configure environment for build
+ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV DATABASE_URL="postgresql://placeholder:placeholder@localhost:5432/placeholder"
+
+# Install all dependencies (including dev dependencies for build)
+RUN npm ci --include=optional
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client and build application
+RUN npx prisma generate && \
+    npm run build
+
+# Production stage
+FROM base AS runner
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    vips
+
+# Set production environment
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
+ENV RUNTIME=true
+
+# Copy built application
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+# Copy Prisma files
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+
+# Copy Sharp module
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/sharp ./node_modules/sharp
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 3000
+
+# Set hostname and port
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+# Start application with dumb-init for proper signal handling
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "server.js"]
