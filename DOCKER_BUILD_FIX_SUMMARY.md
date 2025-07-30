@@ -120,15 +120,25 @@ npm run build
 - Node.js 版本：18.17，满足 Next.js >= 18.17.0 的要求
 
 ### 🔄 Docker 构建测试
-由于当前环境未安装 Docker，需要手动验证：
 
+**重要提示**: 如果遇到 Node.js 18.12.1 版本错误，这是 Docker 缓存问题导致的。
+
+**推荐的构建步骤**:
 ```bash
-# 构建镜像
-docker build -t tiktokmoneycalculator .
+# 方法1: 使用 --no-cache 强制重新拉取镜像
+docker build --no-cache -t tiktokmoneycalculator .
+
+# 方法2: 使用提供的清理脚本
+./docker-build-clean.ps1
 
 # 运行容器
 docker run -p 3000:3000 tiktokmoneycalculator
 ```
+
+**为什么需要 --no-cache**:
+- Docker 可能缓存了旧的 node:18-alpine 镜像（18.12.1 版本）
+- --no-cache 标志强制 Docker 重新拉取 node:18.17-alpine3.15 镜像
+- 这确保使用正确的 Node.js 版本来满足 Next.js >= 18.17.0 的要求
 
 ## 技术细节
 

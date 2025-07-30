@@ -25,7 +25,12 @@ if (Get-Command docker -ErrorAction SilentlyContinue) {
     Write-Host "✅ Local npm build completed successfully" -ForegroundColor Green
 }
 
-Write-Host "\nNext steps:" -ForegroundColor Cyan
+Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host "1. Install Docker if not available" -ForegroundColor White
-Write-Host "2. Run: docker build -t tiktokmoneycalculator ." -ForegroundColor White
-Write-Host "3. Test the container: docker run -p 3000:3000 tiktokmoneycalculator" -ForegroundColor White
+Write-Host "2. IMPORTANT: Use --no-cache to avoid Node.js version cache issues" -ForegroundColor Yellow
+Write-Host "3. Run: docker build --no-cache -t tiktokmoneycalculator ." -ForegroundColor White
+Write-Host "4. Or use the clean build script: ./docker-build-clean.ps1" -ForegroundColor White
+Write-Host "5. Test the container: docker run -p 3000:3000 tiktokmoneycalculator" -ForegroundColor White
+Write-Host "" -ForegroundColor White
+Write-Host "⚠️  Note: If you see Node.js 18.12.1 error, it's Docker cache issue." -ForegroundColor Yellow
+Write-Host "The --no-cache flag will force pulling the correct Node.js 18.17 image." -ForegroundColor Yellow
