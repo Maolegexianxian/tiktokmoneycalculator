@@ -476,9 +476,9 @@ export const pageViewSchema = z.object({
 });
 
 /**
- * 文件上传验证模式
+ * 文件上传验证模式 - 仅在客户端使用
  */
-export const fileUploadSchema = z.object({
+export const fileUploadSchema = typeof window !== 'undefined' ? z.object({
   file: z
     .any()
     .refine((file) => {
@@ -500,7 +500,7 @@ export const fileUploadSchema = z.object({
         message: 'Only JPEG, PNG, GIF, and WebP images are allowed',
       }
     ),
-});
+}) : z.object({ file: z.any() }); // 服务器端简化版本
 
 /**
  * 搜索查询验证模式
