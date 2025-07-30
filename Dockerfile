@@ -33,6 +33,11 @@ RUN npx prisma generate
 # Rebuild the source code only when needed
 FROM base AS builder
 
+# Install build dependencies including OpenSSL 1.1 for Prisma
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+    libc6-compat \
+    openssl1.1-compat
+
 # Install build dependencies
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     libc6-compat \
