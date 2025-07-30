@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import { Loader2, Upload, User } from 'lucide-react';
 import { CONTENT_NICHES, AUDIENCE_LOCATIONS } from '@/lib/constants';
-import type { ClientFile } from '@/types/file';
+// import type { ClientFile } from '@/types/file';
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -35,7 +35,7 @@ export function ProfileForm() {
   const t = useTranslations('dashboard.profile');
   const { data: session, update } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  const [avatarFile, setAvatarFile] = useState<ClientFile | null>(null);
+  const [avatarFile, setAvatarFile] = useState<any>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const {
@@ -71,7 +71,7 @@ export function ProfileForm() {
         return;
       }
 
-      setAvatarFile(file as ClientFile);
+      setAvatarFile(file);
       
       const reader = new FileReader();
       reader.onload = (e) => {

@@ -1,5 +1,6 @@
 /**
  * 文件类型定义 - 跨平台兼容
+ * 暂时禁用以避免构建时引用问题
  */
 
 // 服务器端文件接口（FormData中的文件）
@@ -11,10 +12,11 @@ export interface ServerFile {
 }
 
 // 客户端文件接口（浏览器File对象）
+// 暂时使用any类型避免构建时File引用
 export interface ClientFile extends ServerFile {
   lastModified: number;
   webkitRelativePath: string;
-  stream(): ReadableStream;
+  stream(): any; // ReadableStream<Uint8Array>
   text(): Promise<string>;
 }
 
