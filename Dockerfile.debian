@@ -1,11 +1,11 @@
-# Railway Dockerfile - Ultra Simple
-FROM node:18-alpine
+# Railway Dockerfile - Debian for better Prisma compatibility
+FROM node:18-slim
 
-# Install OpenSSL 1.1 for Prisma compatibility
-RUN apk add --no-cache \
-    libc6-compat \
-    openssl1.1-compat \
-    openssl1.1-compat-dev
+# Install system dependencies including OpenSSL
+RUN apt-get update && apt-get install -y \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -21,9 +21,6 @@ COPY prisma ./prisma
 # Verify prisma files are copied
 RUN ls -la prisma/ && echo "Prisma files copied successfully"
 
-# Set OpenSSL environment for Prisma
-ENV OPENSSL_CONF=/dev/null
-
 # Generate Prisma client
 RUN npx prisma generate
 
@@ -33,14 +30,10 @@ COPY . .
 # Build the application
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV OPENSSL_CONF=/dev/null
 RUN npm run build
 
 # Expose port
 EXPOSE 3000
-
-# Set runtime environment variables
-ENV OPENSSL_CONF=/dev/null
 
 # Start the application
 CMD ["npm", "start"]

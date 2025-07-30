@@ -1,13 +1,19 @@
-# Railway Dockerfile - Ultra Simple
+# Railway Dockerfile - Alpine with Prisma engine fix
 FROM node:18-alpine
 
-# Install OpenSSL 1.1 for Prisma compatibility
+# Install OpenSSL 1.1 and other dependencies for Prisma
 RUN apk add --no-cache \
     libc6-compat \
     openssl1.1-compat \
-    openssl1.1-compat-dev
+    openssl1.1-compat-dev \
+    ca-certificates
 
 WORKDIR /app
+
+# Set Prisma environment variables
+ENV PRISMA_CLI_BINARY_TARGETS="linux-musl,linux-musl-openssl-1.1.x"
+ENV PRISMA_ENGINES_MIRROR="https://binaries.prisma.sh"
+ENV OPENSSL_CONF=/dev/null
 
 # Copy package files first for better caching
 COPY package*.json ./
@@ -21,11 +27,8 @@ COPY prisma ./prisma
 # Verify prisma files are copied
 RUN ls -la prisma/ && echo "Prisma files copied successfully"
 
-# Set OpenSSL environment for Prisma
-ENV OPENSSL_CONF=/dev/null
-
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client with specific binary targets
+RUN npx prisma generate --generator client --binary-targets="linux-musl,linux-musl-openssl-1.1.x"
 
 # Copy everything else (let .dockerignore handle exclusions)
 COPY . .
@@ -33,7 +36,6 @@ COPY . .
 # Build the application
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV OPENSSL_CONF=/dev/null
 RUN npm run build
 
 # Expose port
