@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
+import { useRouter, usePathname } from '@/routing';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -45,33 +45,9 @@ export function LanguageSwitcher({ className, variant = 'default' }: LanguageSwi
   const currentLanguage = languages.find(lang => lang.code === currentLocale) || languages[0];
 
   const handleLanguageChange = (languageCode: string) => {
-    // 获取当前路径，移除语言前缀
-    // 支持的语言代码列表
-    const supportedLocales = ['en', 'zh', 'ja', 'ko', 'es', 'fr', 'de'];
-    
-    let pathWithoutLocale = pathname;
-    
-    // 检查路径是否以支持的语言代码开头
-    for (const locale of supportedLocales) {
-      const localePrefix = `/${locale}`;
-      if (pathname.startsWith(localePrefix + '/') || pathname === localePrefix) {
-        pathWithoutLocale = pathname.substring(localePrefix.length) || '/';
-        break;
-      }
-    }
-    
-    // 如果路径不是以语言代码开头，说明是默认语言(en)
-    if (pathWithoutLocale === pathname && !pathname.startsWith('/en')) {
-      pathWithoutLocale = pathname;
-    }
-    
-    // 构建新的路径
-    const newPath = languageCode === 'en' 
-      ? pathWithoutLocale === '/' ? '/' : pathWithoutLocale
-      : `/${languageCode}${pathWithoutLocale === '/' ? '' : pathWithoutLocale}`;
-    
-    // 导航到新路径
-    router.push(newPath);
+    // 使用next-intl的路由器进行语言切换
+    // 这会自动处理路径转换和语言前缀
+    router.replace(pathname, { locale: languageCode });
     setIsOpen(false);
   };
 

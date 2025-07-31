@@ -21,7 +21,7 @@ interface SuccessStory {
   name: string;
   username: string;
   platform: string;
-  avatar: string;
+  avatar?: string; // 可选，支持生成的头像
   story: string;
   metrics: {
     followers: string;
@@ -135,7 +135,7 @@ export function SuccessStories() {
       name: 'Emma Rodriguez',
       username: 'emmalifestyle',
       platform: 'TikTok',
-      avatar: '/avatars/emma.jpg',
+      avatar: undefined, // 使用生成的头像
       story: t('story1.content'),
       metrics: {
         followers: '1.2M',
@@ -155,7 +155,7 @@ export function SuccessStories() {
       name: 'Marcus Chen',
       username: 'techtalkmarcus',
       platform: 'YouTube',
-      avatar: '/avatars/marcus.jpg',
+      avatar: undefined, // 使用生成的头像
       story: t('story2.content'),
       metrics: {
         followers: '850K',
@@ -175,7 +175,7 @@ export function SuccessStories() {
       name: 'Sofia Andersson',
       username: 'sofiafitness',
       platform: 'Instagram',
-      avatar: '/avatars/sofia.jpg',
+      avatar: undefined, // 使用生成的头像
       story: t('story3.content'),
       metrics: {
         followers: '650K',

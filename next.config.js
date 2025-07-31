@@ -22,17 +22,36 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: [
-      'localhost',
-      'vercel.app',
-      'images.unsplash.com',
-      'avatars.githubusercontent.com',
-      'lh3.googleusercontent.com',
-      'platform-lookaside.fbsbx.com',
-      'cdn.discordapp.com',
-    ],
     formats: ['image/webp', 'image/avif'],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'vercel.app',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'platform-lookaside.fbsbx.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.discordapp.com',
+      },
       {
         protocol: 'https',
         hostname: '**',
