@@ -116,7 +116,8 @@ export const calculator = {
       calculating: "计算中..."
     },
     tips: {
-      accuracy: "填写越多信息，计算越精准。"
+      accuracy: "填写越多信息，计算越精准。",
+      quickStart: "💡 您可以立即开始计算！仅凭基本信息就能获得准确的收益预测。使用高级选项可以让结果更加精确。"
     }
   },
   instagram: {

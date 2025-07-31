@@ -19,7 +19,7 @@ interface Testimonial {
   name: string;
   role: string;
   platform: string;
-  avatar: string;
+  avatar?: string; // 可选，支持生成的头像
   rating: number;
   content: string;
   metrics: {
@@ -127,7 +127,7 @@ export function Testimonials() {
       name: 'Sarah Chen',
       role: 'Content Creator',
       platform: 'TikTok',
-      avatar: '/avatars/sarah.jpg',
+      avatar: undefined, // 使用生成的头像
       rating: 5,
       content: t('testimonial1.content'),
       metrics: {
@@ -143,7 +143,7 @@ export function Testimonials() {
       name: 'Marcus Johnson',
       role: 'Influencer',
       platform: 'Instagram',
-      avatar: '/avatars/marcus.jpg',
+      avatar: undefined, // 使用生成的头像
       rating: 5,
       content: t('testimonial2.content'),
       metrics: {
@@ -159,7 +159,7 @@ export function Testimonials() {
       name: 'Emma Rodriguez',
       role: 'YouTuber',
       platform: 'YouTube',
-      avatar: '/avatars/emma.jpg',
+      avatar: undefined, // 使用生成的头像
       rating: 5,
       content: t('testimonial3.content'),
       metrics: {
@@ -175,7 +175,7 @@ export function Testimonials() {
       name: 'Alex Kim',
       role: 'Digital Creator',
       platform: 'TikTok',
-      avatar: '/avatars/alex.jpg',
+      avatar: undefined, // 使用生成的头像
       rating: 5,
       content: t('testimonial4.content'),
       metrics: {
@@ -191,7 +191,7 @@ export function Testimonials() {
       name: 'Lisa Wang',
       role: 'Brand Ambassador',
       platform: 'Instagram',
-      avatar: '/avatars/lisa.jpg',
+      avatar: undefined, // 使用生成的头像
       rating: 5,
       content: t('testimonial5.content'),
       metrics: {
@@ -207,7 +207,7 @@ export function Testimonials() {
       name: 'David Park',
       role: 'Content Strategist',
       platform: 'YouTube',
-      avatar: '/avatars/david.jpg',
+      avatar: undefined, // 使用生成的头像
       rating: 4,
       content: t('testimonial6.content'),
       metrics: {

@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { CustomAvatar } from '@/components/ui/CustomAvatar';
 import { Container } from '@/components/ui/Container';
 import {
   Star,
@@ -25,7 +25,7 @@ interface SocialProofItem {
     author?: {
       name: string;
       role: string;
-      avatar: string;
+      avatar?: string; // 可选，支持生成的头像
     };
     rating?: number;
     source?: string;
@@ -59,12 +59,12 @@ function ReviewCard({ item }: ReviewCardProps) {
           </p>
           {content.author && (
             <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={content.author.avatar} alt={content.author.name} />
-                <AvatarFallback>
-                  {content.author.name.split(' ').map(n => n[0]).join('')}
-                </AvatarFallback>
-              </Avatar>
+              <CustomAvatar
+                name={content.author.name}
+                src={content.author.avatar}
+                size={40}
+                className="h-10 w-10"
+              />
               <div>
                 <div className="font-semibold text-sm">{content.author.name}</div>
                 <div className="text-xs text-muted-foreground">{content.author.role}</div>
@@ -136,7 +136,7 @@ export function SocialProof() {
         author: {
           name: 'Alex Thompson',
           role: 'Content Creator',
-          avatar: '/avatars/alex.jpg',
+          avatar: undefined, // 使用生成的头像
         },
       },
     },
@@ -157,7 +157,7 @@ export function SocialProof() {
         author: {
           name: 'Maria Garcia',
           role: 'Influencer',
-          avatar: '/avatars/maria.jpg',
+          avatar: undefined, // 使用生成的头像
         },
       },
     },
@@ -193,7 +193,7 @@ export function SocialProof() {
         author: {
           name: 'David Kim',
           role: 'YouTuber',
-          avatar: '/avatars/david.jpg',
+          avatar: undefined, // 使用生成的头像
         },
       },
     },
