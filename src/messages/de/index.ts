@@ -81,15 +81,74 @@ const de: Messages = {
       chinese: "中文"
     }
   },
-  hero: {},
-  calculator: {},
-  dashboard: {},
-  auth: {},
-  common: {},
-  faq: {},
-  features: {},
-  testimonials: {},
-  platforms: {}
+  hero: {
+    title: "TikTok Creator Calculator",
+    subtitle: "Berechnen Sie Ihre Einnahmen"
+  },
+  calculator: {
+    title: "Rechner",
+    subtitle: "Einnahmen berechnen"
+  },
+  dashboard: {
+    title: "Dashboard",
+    subtitle: "Ihre Übersicht"
+  },
+  auth: {
+    title: "Authentifizierung",
+    subtitle: "Anmelden oder registrieren"
+  },
+  common: {
+    title: "Allgemein",
+    subtitle: "Gemeinsame Begriffe"
+  },
+  faq: {
+    title: "FAQ",
+    subtitle: "Häufige Fragen"
+  },
+  features: {
+    title: "Funktionen",
+    subtitle: "Was wir bieten"
+  },
+  testimonials: {
+    title: "Testimonials",
+    subtitle: "Was unsere Nutzer sagen"
+  },
+  newsletter: {
+    title: "Newsletter",
+    subtitle: "Bleiben Sie informiert"
+  },
+  platforms: {
+    title: "Plattformen",
+    subtitle: "Unterstützte Plattformen"
+  },
+  socialProof: {
+    title: "Sozialer Beweis",
+    subtitle: "Vertraut von Tausenden"
+  },
+  stats: {
+    title: "Statistiken",
+    subtitle: "Zahlen die zählen"
+  },
+  howItWorks: {
+    title: "Wie es funktioniert",
+    subtitle: "Einfacher Prozess"
+  },
+  trending: {
+    title: "Trends",
+    subtitle: "Beliebte Inhalte"
+  },
+  successStories: {
+    title: "Erfolgsgeschichten",
+    subtitle: "Echte Fälle"
+  },
+  cta: {
+    title: "Handlungsaufruf",
+    subtitle: "Jetzt starten"
+  },
+  breadcrumb: {
+    home: "Startseite",
+    dashboard: "Dashboard"
+  }
 };
 
 export default de;

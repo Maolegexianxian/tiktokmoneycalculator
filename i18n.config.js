@@ -186,7 +186,7 @@ const getActiveLocales = () => {
 
 module.exports = {
   // 基础配置
-  messagesDir: 'messages',
+  messagesDir: 'src/messages',
   defaultLocale: 'en',
   supportedLocales: getActiveLocales(),
   srcDir: 'src',
